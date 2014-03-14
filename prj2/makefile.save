@@ -1,0 +1,20 @@
+# Main target
+main_flip: main_flip.c
+	cc main_flip.c -o main_flip -I/home/rahul/Ubuntu64/hdr \
+	/home/rahul/Ubuntu64/ifslib/libflip.a /home/rahul/Ubuntu64/ifslib/libiptools.a \
+	/home/rahul/Ubuntu64/ifslib/libifs.a \
+	/home/rahul/Ubuntu64/ifslib/libflip.a -lm  -std=gnu99
+	main_flip
+	ifsview -i out.ifs
+main_flip1: main_flip1.c
+	cc main_flip1.c -o main_flip1 -I/home/rahul/Ubuntu64/hdr \
+	/home/rahul/Ubuntu64/ifslib/libflip.a /home/rahul/Ubuntu64/ifslib/libiptools.a \
+	/home/rahul/Ubuntu64/ifslib/libifs.a \
+	/home/rahul/Ubuntu64/ifslib/libflip.a -lm  -std=gnu99
+	main_flip1
+	ifsview -i out.ifs
+viewflux: flux1.ifs
+		
+
+	
+
