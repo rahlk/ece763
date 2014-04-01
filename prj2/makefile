@@ -1,9 +1,9 @@
 # Main target
 angio: main_ang.c
-	cc main_ang.c -o main_ang -I/home/rahul/Ubuntu64/hdr \
-	/home/rahul/Ubuntu64/ifslib/libflip.a /home/rahul/Ubuntu64/ifslib/libiptools.a \
-	/home/rahul/Ubuntu64/ifslib/libifs.a \
-	/home/rahul/Ubuntu64/ifslib/libflip.a -lm  -std=gnu99
+	cc main_ang.c -o main_ang -I/home/rkrsn/Fedora64/hdr \
+	/home/rkrsn/Fedora64/ifslib/libflip.a /home/rkrsn/Fedora64/ifslib/libiptools.a \
+	/home/rkrsn/Fedora64/ifslib/libifs.a \
+	/home/rkrsn/Fedora64/ifslib/libflip.a -lm  -std=gnu99
 	main_ang
 	ifsview -i out.ifs
 	vidscale -i out.ifs -o angio_out.ifs
