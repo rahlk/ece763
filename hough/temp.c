@@ -14,7 +14,7 @@ float param[16][128][128]={0}; // Parameter matrix.
 int max_x0=0, max_y0=0, max_R=0, max_param=0;
 int r,c;
 int row,col;/*counters */
-IFSIMG img1,inimg, outImg, edge, dx, dy, dxy; //Declare pointers to headers 
+IFSIMG img1,inimg, tempImg, tempImg1, outImg, edge, dx, dy, dxy; //Declare pointers to headers 
 int thresh;
 int pixVal;
 // Read input image
@@ -24,9 +24,12 @@ inimg=ifspin("pcb_lead.ifs");
 int* len=ifssiz(inimg);
 int M = *(len+1); 
 int N = *(len+2);
+int LEN[3]={3,M,N};
 int R=M>N?round(M/2):round(N/2); // Maximum radius of a circle is assumed not to be greater than half as much as the image dimension.
 img1=ifscreate("float", len, IFS_CR_ALL, 0);
-outImg=ifscreate("float", len, IFS_CR_ALL, 0);
+tempImg=ifscreate("float", len, IFS_CR_ALL, 0);
+tempImg1=ifscreate("ubit8", LEN, IFS_CR_ALL, 0);
+outImg=ifscreate("ubit8", LEN, IFS_CR_ALL, 0);
 dx = ifscreate("float" ,len, IFS_CR_ALL,0);
 edge = ifscreate("float" ,len, IFS_CR_ALL,0);
 dy = ifscreate("float" ,len, IFS_CR_ALL,0);
@@ -53,7 +56,7 @@ for (row = 0; row <M; row++ )
 // Save the edge and gradient images.
 ifspot(edge, "edge.ifs"); 
 ifspot(dxy, "dxy.ifs"); 
-flcp(img1, outImg);
+flcp(img1, tempImg);
 // Create a Parametric Image for the HOUGH TRANSFORM
 /* Parameters are R, x0, y0. X and Y are coordinates from the input binary image. x0 and y0 are the centers of the circles and R is the raduis. The Parametric equation of a circle is R = sqrt((X-x0)^2+(Y-y0)^2). We get a 3D matrix for each x0, y0 and X,Y combination.*/
 
@@ -86,8 +89,12 @@ for(R=0; R<16; R++) {
 printf("Circle Detected at x0=%d, y0=%d\n Radius=%d\n",max_x0, max_y0, max_R);
 
 // Save image and midpoint of the best circle
-ifsfpp(outImg, max_x0, max_y0, 200);
-ifspot(outImg, "outimg.ifs");
+ifsfpp(tempImg, max_x0, max_y0, 200);
+ifsfpp3d(tempImg1, 0, max_x0, max_y0, 200);
+ifsfpp3d(tempImg1, 1, max_x0, max_y0, 0);
+ifsfpp3d(tempImg1, 2, max_x0, max_y0, 0);
+ifspot(tempImg, "tempImg.ifs");
+ifspot(tempImg1, "c_tempImg.ifs");
 
 int lutrad, lutpixVal;
 // Draw the circle on the original Image.
@@ -96,9 +103,12 @@ for(r=0; r<M; r++)
   float lutrad = floor(sqrt(pow(r-max_x0,2)+pow(c-max_y0,2))); 
      int lutpixVal= (int) lutrad;
      if (lutpixVal==(int) floor(max_R))
-      ifsfpp(outImg, r, c, 200);
+      ifsfpp(tempImg, r, c, 200);
+      ifsfpp3d(tempImg1, 0, r, c, 200);
+      ifsfpp3d(tempImg1, 1, r, c, 0);
+      ifsfpp3d(tempImg1, 2, r, c, 0);
 }
 // Save image and midpoint of the best circle
-ifspot(outImg, "outimg_circ.ifs");
+ifspot(tempImg, "tempImg_circ.ifs");
 
 }
